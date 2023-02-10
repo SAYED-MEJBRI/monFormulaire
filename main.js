@@ -1,25 +1,59 @@
 console.log("script loaded");
 const form = document.querySelector("form");
-// console.log("form => ", form.elements);
-
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
 const regexTel = /^(\+33\s?|0)\s?[1-9]\s?(\d{2}\s?){3}\d{2}$/;
-
 const info = document.createElement('p');
 
+// Ecouteurs d'évènements
 
-// conter le nombre de caractaires
+form.firstName.addEventListener('keyup',() =>{ 
+    countChar(form.firstName);
+})
+form.lastName.addEventListener('keyup',() =>{ 
+    countChar(form.lastName);
+})
+
+form.email.addEventListener('keyup',() =>{ 
+    validationUI(form.email , regexEmail);
+})
+form.pass1.addEventListener('keyup',() =>{ 
+    checkPass(form.pass1 , form.pass2);
+})
+form.pass2.addEventListener('keyup',() =>{ 
+    checkPass(form.pass1 , form.pass2);
+})
+form.contact.addEventListener("keyup", () => {
+    validationUI(form.contact, regexTel);
+});
+
+form.majeur.addEventListener("change", () =>{
+    isMajor(form.majeur)
+})
+
+
+// Soumission du formulaire
+form.addEventListener("submit", () =>{
+    // Tester chaque champ
+    // A chaque fois on enregistre la réponse dans un tableau
+    // Tester si tous les champs du tableau === true pour envoyer le formulaire
+    e.preventDefault();
+    console.log('===================> form sumition')
+})
+
+// compter le nombre de caract
+
 function countChar(input){
     if (input.value.length >4 && input.value.length <=20){
         input.classList.remove("danger");
         input.classList.add("success");
         input.parentElement.classList.add("success-checked")
+        console.info(`✅ ${input.id} Nb de charactère OK`)
         return true;
     }else{
         input.classList.remove("success");
         input.parentElement.classList.remove("success-checked")
         input.classList.add("danger");
+        console.warn(`${input.id}: Nb de charactère incorrect`)
         return true;
     }
 
@@ -45,21 +79,21 @@ function validationUI(input, regex) {
 }
 
 // tester si les mots de passes sont identique
-function checkPass(pass1, pass2){
-    if(pass1.value === pass2.value && pass1.value.length > 4 ){
-        pass1.classList.remove('danger');
-        pass1.classList.add('success');
-        pass2.classList.remove('danger');
-        pass2.classList.add('success');
-        console.info(`✅ ${input.id} les mots de passes sont identiques`);
-        return true;
-    }else{
-        pass1.classList.remove('success');
-        pass1.classList.add('danger');
-        pass2.classList.remove('success');
-        pass2.classList.add('danger');
-        console.warn,(`✅  ${input.id} les mots de passes ne correspondent pas`);
-        return false;
+function checkPass(pass1, pass2) {
+    if(pass1.value === pass2.value && pass1.value.length > 4){
+        pass1.classList.remove("danger");
+        pass1.classList.add("success");
+        pass2.classList.remove("danger");
+        pass2.classList.add("success");
+        console.info("✅ Les mots de passes sont identiques");
+        return true
+    } else {
+        pass1.classList.remove("success");
+        pass1.classList.add("danger");
+        pass2.classList.remove("success");
+        pass2.classList.add("danger");
+        console.warn("Les mots de passes ne correspondent pas");
+        return false
     }
 }
 // Tester si l'utilisateur est majeur

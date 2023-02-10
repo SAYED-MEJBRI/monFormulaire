@@ -1,6 +1,6 @@
-/* body{
-    background-color: black;
-} */
+body{
+    background-color: rgb(189, 241, 179);
+}
 .danger {
     outline: 3px solid red;
 }
