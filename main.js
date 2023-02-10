@@ -1,127 +1,91 @@
+import { checker, sanitizeInput } from "./function.js";
+import { checkPass } from "./function.js";
+import { countChar } from "./function.js";
+import { validationUI } from "./function.js";
+import { isMajor } from "./function.js";
+
+
 console.log("script loaded");
 const form = document.querySelector("form");
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const regexTel = /^(\+33\s?|0)\s?[1-9]\s?(\d{2}\s?){3}\d{2}$/;
-const info = document.createElement('p');
+const info = document.createElement("p");
 
 // Ecouteurs d'évènements
 
-form.firstName.addEventListener('keyup',() =>{ 
+form.firstName.addEventListener("keyup", () => {
     countChar(form.firstName);
-})
-form.lastName.addEventListener('keyup',() =>{ 
+});
+form.lastName.addEventListener("keyup", () => {
     countChar(form.lastName);
-})
+});
 
-form.email.addEventListener('keyup',() =>{ 
-    validationUI(form.email , regexEmail);
-})
-form.pass1.addEventListener('keyup',() =>{ 
-    checkPass(form.pass1 , form.pass2);
-})
-form.pass2.addEventListener('keyup',() =>{ 
-    checkPass(form.pass1 , form.pass2);
-})
+form.email.addEventListener("keyup", () => {
+    validationUI(form.email, regexEmail);
+});
+form.pass1.addEventListener("keyup", () => {
+    checkPass(form.pass1, form.pass2);
+});
+form.pass2.addEventListener("keyup", () => {
+    checkPass(form.pass1, form.pass2);
+});
 form.contact.addEventListener("keyup", () => {
     validationUI(form.contact, regexTel);
 });
 
-form.majeur.addEventListener("change", () =>{
-    isMajor(form.majeur)
-})
-
+form.majeur.addEventListener("change", () => {
+    isMajor(form.majeur);
+});
 
 // Soumission du formulaire
-form.addEventListener("submit", () =>{
+form.addEventListener("submit", (e) => {
     // Tester chaque champ
     // A chaque fois on enregistre la réponse dans un tableau
     // Tester si tous les champs du tableau === true pour envoyer le formulaire
     e.preventDefault();
-    console.log('===================> form sumition')
-})
-
-// compter le nombre de caract
-
-function countChar(input){
-    if (input.value.length >4 && input.value.length <=20){
-        input.classList.remove("danger");
-        input.classList.add("success");
-        input.parentElement.classList.add("success-checked")
-        console.info(`✅ ${input.id} Nb de charactère OK`)
-        return true;
+    console.log("===================> form sumition");
+    let isValid = false;
+    let verif = [];
+    for (let i = 0; i < form.elements.length; i++) {
+        let field = form.elements[i];
+       
+        if (field.id === "firstName" || field.id === "lastName"  ) {
+            field.value = sanitizeInput(field.value);        
+            isValid=countChar(field);
+            verif.push(isValid);
+        } 
+        if (field.id === "email") {
+            isValid = validationUI(field, regexEmail);
+            verif.push(isValid);
+        }
+        if (field.id === "pass1" || field.id === "pass2"){
+            isValid = checkPass(form.pass1, form.pass2);
+            verif.push(isValid)
+        }
+        if (field.id === "contact") {
+            isValid = validationUI(field, regexTel);
+            verif.push(isValid);
+        }
+        if (field.id === "majeur") {
+            isValid = isMajor(field);
+            verif.push(isValid);
+        }
+        console.log('verif => ', verif);
+    }
+   
+    if (checker(verif)) {
+        console.log("✅ data sent to server")
+        setTimeout( () =>form.submit(), 2000);
     }else{
-        input.classList.remove("success");
-        input.parentElement.classList.remove("success-checked")
-        input.classList.add("danger");
-        console.warn(`${input.id}: Nb de charactère incorrect`)
-        return true;
+        console.warn("Form is invalide")
     }
+   
+    // const isLargeNumber = (element) => element === false;
+    // if(verif.findIndex(isLargeNumber) > -1){
+    //     console.warn("Form is invalide")
+    // }else{
+    //     console.log("✅ data sent to server")
+    // }
+});
 
-}
 
-
-
-// verifier la présence d'un mail valide et un numéro de téléphone valide
-
-function validationUI(input, regex) {
-    if (regex.test(input.value)) {
-        input.classList.remove("danger");
-        input.classList.add("success");
-        input.parentElement.classList.add("success-checked")
-        console.info("✅ input is valid");
-        return true;
-    } else {
-        input.classList.remove("success");
-        input.classList.add("danger");
-        console.warn("input is invalid");
-        return false;
-    }
-}
-
-// tester si les mots de passes sont identique
-function checkPass(pass1, pass2) {
-    if(pass1.value === pass2.value && pass1.value.length > 4){
-        pass1.classList.remove("danger");
-        pass1.classList.add("success");
-        pass2.classList.remove("danger");
-        pass2.classList.add("success");
-        console.info("✅ Les mots de passes sont identiques");
-        return true
-    } else {
-        pass1.classList.remove("success");
-        pass1.classList.add("danger");
-        pass2.classList.remove("success");
-        pass2.classList.add("danger");
-        console.warn("Les mots de passes ne correspondent pas");
-        return false
-    }
-}
-// Tester si l'utilisateur est majeur
-function isMajor(input){
-    if(input.checked ){
-        input.parentElement.classList.remove('danger');
-        input.parentElement.classList.add('success');
-        console.info("✅ Utilisateur majeur");
-        return true;
-    }else{
-        input.parentElement.classList.remove('success');
-        input.parentElement.classList.add('danger');
-        console.info("✅ Utilisateur mineur"); 
-        return false;
-    }
-}
-// Empécher l'injection de code ou de caractaires spéciaux
-
-function sanitizeInput(input) {
-    // Enlever les balises HTML
-    input = input.replace(/<[^>]*>/g, "");
-    // Enlever les caractères spéciaux dangereux
-    input = input.replace(/[^a-zA-Z0-9 ]/g, "");
-    // Enlever les espaces multiples
-    input = input.replace(/\s\s+/g, " ");
-    console.log("input 4 => ", input);
-    // Enlever les espaces en début et fin de chaîne
-    input = input.trim();
-    console.log("input 5 => ", input);
-    return input;
-}
