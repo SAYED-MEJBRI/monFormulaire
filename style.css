@@ -1,0 +1,102 @@
+body{
+    background-color: rgb(189, 241, 179);
+}
+.danger {
+    outline: 3px solid red;
+}
+
+.success {
+    outline: 3px solid green;
+}
+div  {
+    position: relative;
+}
+.success-checked::after {
+    content: "\F26E";
+    font-family: 'bootstrap-icons';
+    color: green;
+    font-size: 1.5em;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+}
+
+input{
+    background-color: transparent !important;
+    background-image: none !important;
+    color: -internal-light-dark-color(black, white) !important;
+}
+
+
+
+/* jjdjjjdj */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.text-r {
+    text-align: right;
+}
